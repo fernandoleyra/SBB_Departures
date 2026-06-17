@@ -98,10 +98,30 @@ struct DashboardView: View {
     private var detail: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                SBBBrandHeader(
-                    title: appState.activeProfile?.name ?? "Departure board",
-                    subtitle: subtitle
-                )
+                HStack(spacing: 16) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(SBBStyle.red)
+                        HStack(spacing: 3) {
+                            Image(systemName: "arrow.left")
+                            Text("SBB")
+                                .font(.system(size: 17, weight: .black))
+                            Image(systemName: "arrow.right")
+                        }
+                        .foregroundStyle(.white)
+                        .font(.system(size: 13, weight: .bold))
+                    }
+                    .frame(width: 86, height: 40)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(appState.activeProfile?.name ?? "Departure board")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundStyle(SBBStyle.graphite)
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
                 statusStrip
                 departureBoard
             }

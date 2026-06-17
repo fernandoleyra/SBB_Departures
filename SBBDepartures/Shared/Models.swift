@@ -26,7 +26,7 @@ struct LocationProfile: Identifiable, Codable, Hashable {
     }
 
     var displayColorHex: String {
-        colorHex?.isEmpty == false ? colorHex! : "#EB0000"
+        colorHex?.isEmpty == false ? colorHex! : SBBPalette.redHex
     }
 
     static let home = LocationProfile(id: UUID(), name: "Home", coordinate: nil, radiusMeters: nil, mode: .manual, emoji: "🏠", colorHex: nil)

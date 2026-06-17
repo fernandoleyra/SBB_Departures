@@ -76,6 +76,6 @@ final class FixtureTests: XCTestCase {
         let state = try JSONDecoder().decode(DeparturesStoreState.self, from: json)
 
         XCTAssertEqual(state.profiles[0].displayEmoji, "🚆")
-        XCTAssertEqual(state.profiles[0].displayColorHex, "#EB0000")
+        XCTAssertEqual(state.profiles[0].displayColorHex, SBBPalette.redHex)
     }
 }

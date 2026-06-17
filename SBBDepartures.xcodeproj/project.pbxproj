@@ -25,6 +25,9 @@
 		A00000000000000000001110 /* DeparturesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002010 /* DeparturesWidget.swift */; };
 		A00000000000000000001201 /* FixtureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002011 /* FixtureTests.swift */; };
 		A00000000000000000001202 /* DepartureLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002012 /* DepartureLogicTests.swift */; };
+		A00000000000000000001205 /* SBBStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002018 /* SBBStyleTests.swift */; };
+		A00000000000000000001206 /* SBBStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002016 /* SBBStyle.swift */; };
+		A00000000000000000001111 /* SBBStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002016 /* SBBStyle.swift */; };
 		A00000000000000000001203 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002001 /* Models.swift */; };
 		A00000000000000000001204 /* TransportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002002 /* TransportAPI.swift */; };
 		A00000000000000000001301 /* SBBDeparturesWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A00000000000000000003002 /* SBBDeparturesWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -69,6 +72,7 @@
 		A00000000000000000002010 /* DeparturesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesWidget.swift; sourceTree = "<group>"; };
 		A00000000000000000002011 /* FixtureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureTests.swift; sourceTree = "<group>"; };
 		A00000000000000000002012 /* DepartureLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartureLogicTests.swift; sourceTree = "<group>"; };
+		A00000000000000000002018 /* SBBStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBStyleTests.swift; sourceTree = "<group>"; };
 		A00000000000000000002013 /* SBBDepartures.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SBBDepartures.entitlements; sourceTree = "<group>"; };
 		A00000000000000000002014 /* SBBDeparturesWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SBBDeparturesWidget.entitlements; sourceTree = "<group>"; };
 		A00000000000000000002015 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 			children = (
 				A00000000000000000002011 /* FixtureTests.swift */,
 				A00000000000000000002012 /* DepartureLogicTests.swift */,
+				A00000000000000000002018 /* SBBStyleTests.swift */,
 			);
 			path = SBBDeparturesTests;
 			sourceTree = SOURCE_ROOT;
@@ -290,6 +295,7 @@
 				A00000000000000000001103 /* SharedStore.swift in Sources */,
 				A00000000000000000001105 /* DateFormatting.swift in Sources */,
 				A00000000000000000001110 /* DeparturesWidget.swift in Sources */,
+				A00000000000000000001111 /* SBBStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +307,8 @@
 				A00000000000000000001204 /* TransportAPI.swift in Sources */,
 				A00000000000000000001201 /* FixtureTests.swift in Sources */,
 				A00000000000000000001202 /* DepartureLogicTests.swift in Sources */,
+				A00000000000000000001205 /* SBBStyleTests.swift in Sources */,
+				A00000000000000000001206 /* SBBStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

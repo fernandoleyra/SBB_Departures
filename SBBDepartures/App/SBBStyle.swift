@@ -51,10 +51,10 @@ enum SBBStyle {
             return violet
         case let x where x.hasPrefix("S"):
             return green
-        case let x where x.hasPrefix("NFB") || x.hasPrefix("B"):
-            return blue
         case let x where x.hasPrefix("BAT") || x.hasPrefix("CGN"):
             return teal
+        case let x where x.hasPrefix("NFB") || x.hasPrefix("B"):
+            return blue
         case let x where x.hasPrefix("N"):
             return graphite
         default:
@@ -79,36 +79,3 @@ struct LineBadge: View {
     }
 }
 
-struct SBBBrandHeader: View {
-    var title: String
-    var subtitle: String
-
-    var body: some View {
-        HStack(spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(SBBStyle.red)
-                HStack(spacing: 3) {
-                    Image(systemName: "arrow.left")
-                    Text("SBB")
-                        .font(.system(size: 17, weight: .black))
-                    Image(systemName: "arrow.right")
-                }
-                .foregroundStyle(.white)
-                .font(.system(size: 13, weight: .bold))
-            }
-            .frame(width: 86, height: 40)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(SBBStyle.graphite)
-                Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-        }
-    }
-}
