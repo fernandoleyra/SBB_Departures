@@ -90,14 +90,14 @@ final class DeparturesAppState: NSObject, ObservableObject {
         }
     }
 
-    func addProfile() {
+    func addProfile(mode: LocationProfile.Mode = .manual) {
         let profile = LocationProfile(
             id: UUID(),
-            name: "New profile",
+            name: mode == .automatic ? "Nearby" : "New profile",
             coordinate: nil,
-            radiusMeters: nil,
-            mode: .manual,
-            emoji: "⭐️",
+            radiusMeters: mode == .automatic ? 600 : nil,
+            mode: mode,
+            emoji: mode == .automatic ? "📍" : "⭐️",
             colorHex: nil
         )
         state.profiles.append(profile)
@@ -183,6 +183,16 @@ final class DeparturesAppState: NSObject, ObservableObject {
         state.favorites.removeAll { ids.contains($0.id) }
         state.snapshots.removeAll { ids.contains($0.favoriteId) }
         persist()
+    }
+
+    func hasFavorite(stopId: String, category: String, number: String, destination: String) -> Bool {
+        state.favorites.contains { f in
+            f.profileId == state.activeProfileId
+                && f.stopId == stopId
+                && DepartureLogic.normalize(f.lineCategory) == DepartureLogic.normalize(category)
+                && DepartureLogic.normalize(f.lineNumber) == DepartureLogic.normalize(number)
+                && DepartureLogic.normalize(f.directionName) == DepartureLogic.normalize(destination)
+        }
     }
 
     func updateFavorite(_ favorite: FavoriteTransport) {

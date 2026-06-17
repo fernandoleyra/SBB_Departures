@@ -171,7 +171,7 @@ enum DepartureLogic {
         return now.timeIntervalSince(lastRefresh) > threshold
     }
 
-    private static func normalize(_ value: String) -> String {
+    static func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines)
             .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
     }
