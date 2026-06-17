@@ -26,7 +26,7 @@ struct LocationProfile: Identifiable, Codable, Hashable {
     }
 
     var displayColorHex: String {
-        colorHex?.isEmpty == false ? colorHex! : SBBPalette.redHex
+        colorHex?.isEmpty == false ? colorHex! : "#EB0000"
     }
 
     static let home = LocationProfile(id: UUID(), name: "Home", coordinate: nil, radiusMeters: nil, mode: .manual, emoji: "🏠", colorHex: nil)
@@ -177,15 +177,3 @@ enum DepartureLogic {
     }
 }
 
-enum SBBPalette {
-    static let redHex = "#EB0000"
-    static let redDarkHex = "#C60018"
-    static let milkHex = "#F6F6F6"
-    static let cloudHex = "#E5E5E5"
-    static let metalHex = "#DCDCDC"
-    static let graphiteHex = "#2D2D2D"
-    static let blueHex = "#1F6AA5"
-    static let greenHex = "#2E7D32"
-    static let violetHex = "#7B3FA1"
-    static let orangeHex = "#D86B00"
-}
