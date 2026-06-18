@@ -251,27 +251,28 @@ struct DepartureBoardSection: View {
                     .foregroundStyle(SBBStyle.redDark)
                     .padding(10)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                    .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
             }
 
-            if appState.dashboardSnapshots.isEmpty {
+            let rows = Array(appState.dashboardSnapshots.prefix(12))
+            if rows.isEmpty {
                 Text("No departures — add a watched line below.")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, minHeight: 80)
                     .multilineTextAlignment(.center)
                     .padding()
-                    .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                    .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
                     .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
             } else {
                 VStack(spacing: 0) {
-                    ForEach(Array(appState.dashboardSnapshots.prefix(12).enumerated()), id: \.element.id) { index, snapshot in
+                    ForEach(Array(rows.enumerated()), id: \.element.id) { index, snapshot in
                         DepartureBoardRow(snapshot: snapshot)
-                        if index < min(appState.dashboardSnapshots.count, 12) - 1 {
+                        if index < rows.count - 1 {
                             Divider()
                         }
                     }
                 }
-                .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
                 .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
             }
         }
@@ -320,7 +321,11 @@ struct DepartureBoardRow: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(snapshot.lineDisplay) to \(snapshot.destination) in \(DepartureLogic.minutesUntil(snapshot.effectiveDeparture)) minutes")
+        .accessibilityLabel({
+            let delay = snapshot.delayMinutes ?? 0
+            let delaySuffix = delay > 0 ? ", \(delay) minute delay" : ""
+            return "\(snapshot.lineDisplay) to \(snapshot.destination) in \(DepartureLogic.minutesUntil(snapshot.effectiveDeparture)) minutes\(delaySuffix)"
+        }())
     }
 }
 

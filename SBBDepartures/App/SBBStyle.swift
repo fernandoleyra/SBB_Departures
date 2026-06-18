@@ -14,6 +14,7 @@ extension Color {
 enum SBBPalette {
     static let redHex = "#EB0000"
     static let redDarkHex = "#C60018"
+    static let whiteHex = "#FFFFFF"
     static let milkHex = "#F6F6F6"
     static let cloudHex = "#E5E5E5"
     static let metalHex = "#DCDCDC"
@@ -28,6 +29,7 @@ enum SBBPalette {
 enum SBBStyle {
     static let red      = Color(hex: SBBPalette.redHex)
     static let redDark  = Color(hex: SBBPalette.redDarkHex)
+    static let white    = Color(hex: SBBPalette.whiteHex)
     static let milk     = Color(hex: SBBPalette.milkHex)
     static let cloud    = Color(hex: SBBPalette.cloudHex)
     static let graphite = Color(hex: SBBPalette.graphiteHex)
