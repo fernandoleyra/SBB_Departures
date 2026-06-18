@@ -19,7 +19,7 @@ final class DeparturesAppState: NSObject, ObservableObject {
     private let store: SharedStore
     private let notifications = NotificationService()
     private let locationManager = CLLocationManager()
-    private var refreshTask: Task<Void, Never>?
+    var refreshTask: Task<Void, Never>?
 
     init(store: SharedStore = .shared) {
         self.store = store
