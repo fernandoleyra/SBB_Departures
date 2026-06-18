@@ -15,9 +15,7 @@
 		A00000000000000000001006 /* SBBDeparturesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002006 /* SBBDeparturesApp.swift */; };
 		A00000000000000000001007 /* DeparturesAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002007 /* DeparturesAppState.swift */; };
 		A00000000000000000001008 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002008 /* MenuBarPopoverView.swift */; };
-		A00000000000000000001009 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002009 /* SettingsView.swift */; };
 		A0000000000000000000100A /* SBBStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002016 /* SBBStyle.swift */; };
-		A0000000000000000000100B /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002017 /* DashboardView.swift */; };
 		A00000000000000000001101 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002001 /* Models.swift */; };
 		A00000000000000000001102 /* TransportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002002 /* TransportAPI.swift */; };
 		A00000000000000000001103 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002003 /* SharedStore.swift */; };
@@ -72,9 +70,7 @@
 		A00000000000000000002006 /* SBBDeparturesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBDeparturesApp.swift; sourceTree = "<group>"; };
 		A00000000000000000002007 /* DeparturesAppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesAppState.swift; sourceTree = "<group>"; };
 		A00000000000000000002008 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
-		A00000000000000000002009 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A00000000000000000002016 /* SBBStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBStyle.swift; sourceTree = "<group>"; };
-		A00000000000000000002017 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		A00000000000000000002010 /* DeparturesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesWidget.swift; sourceTree = "<group>"; };
 		A00000000000000000002011 /* FixtureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureTests.swift; sourceTree = "<group>"; };
 		A00000000000000000002012 /* DepartureLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartureLogicTests.swift; sourceTree = "<group>"; };
@@ -156,9 +152,7 @@
 				A00000000000000000002008 /* MenuBarPopoverView.swift */,
 				A0000000000000000000201A /* ManagementWindowView.swift */,
 				A0000000000000000000201B /* WatchedLinesSection.swift */,
-				A00000000000000000002009 /* SettingsView.swift */,
 				A00000000000000000002016 /* SBBStyle.swift */,
-				A00000000000000000002017 /* DashboardView.swift */,
 				A00000000000000000002013 /* SBBDepartures.entitlements */,
 			);
 			path = SBBDepartures/App;
@@ -294,9 +288,7 @@
 				A00000000000000000001008 /* MenuBarPopoverView.swift in Sources */,
 				A0000000000000000000100C /* ManagementWindowView.swift in Sources */,
 				A0000000000000000000100D /* WatchedLinesSection.swift in Sources */,
-				A00000000000000000001009 /* SettingsView.swift in Sources */,
 				A0000000000000000000100A /* SBBStyle.swift in Sources */,
-				A0000000000000000000100B /* DashboardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

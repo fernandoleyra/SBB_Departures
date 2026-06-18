@@ -5,8 +5,8 @@ struct SBBDeparturesApp: App {
     @StateObject private var appState = DeparturesAppState()
 
     var body: some Scene {
-        WindowGroup {
-            DashboardView()
+        WindowGroup(id: "management") {
+            ManagementWindowView()
                 .environmentObject(appState)
         }
         .windowToolbarStyle(.unified)
@@ -14,16 +14,10 @@ struct SBBDeparturesApp: App {
         MenuBarExtra {
             MenuBarPopoverView()
                 .environmentObject(appState)
-                .frame(width: 390)
+                .frame(width: 420)
         } label: {
             Label(appState.menuBarTitle, systemImage: "tram.fill")
         }
         .menuBarExtraStyle(.window)
-
-        Settings {
-            SettingsView()
-                .environmentObject(appState)
-                .frame(minWidth: 680, minHeight: 520)
-        }
     }
 }
