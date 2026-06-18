@@ -329,7 +329,3 @@ struct DepartureBoardRow: View {
     }
 }
 
-// MARK: - WatchedLinesSection stub (replaced in Task 5)
-struct WatchedLinesSection: View {
-    var body: some View { EmptyView() }
-}
