@@ -46,7 +46,7 @@ struct DeparturesWidgetView: View {
                 Spacer()
                 if DepartureLogic.isStale(lastRefresh: entry.state.lastRefresh) {
                     Image(systemName: "clock.badge.exclamationmark")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color(hex: SBBPalette.orangeHex))
                 }
             }
 
