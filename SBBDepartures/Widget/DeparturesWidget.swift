@@ -86,8 +86,10 @@ struct WidgetDepartureRow: View {
 
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 4) {
-                    Text(snapshot.lineDisplay)
-                        .font(.subheadline.weight(.semibold))
+                    LineBadge(
+                        text: snapshot.lineDisplay,
+                        color: SBBStyle.badgeColor(for: snapshot.lineDisplay)
+                    )
                     Text(snapshot.destination)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -96,7 +98,7 @@ struct WidgetDepartureRow: View {
                 HStack(spacing: 6) {
                     Text(DepartureDateFormatting.timeFormatter.string(from: snapshot.effectiveDeparture))
                     if let delay = snapshot.delayMinutes, delay > 0 {
-                        Text("+\(delay)").foregroundStyle(.red)
+                        Text("+\(delay)").foregroundStyle(SBBStyle.redDark)
                     }
                     if let platform = snapshot.platform, !platform.isEmpty {
                         Text("Pl. \(platform)")
