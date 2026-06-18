@@ -51,7 +51,7 @@ struct WatchedLinesSection: View {
                     showingAddPanel.toggle()
                 }
             } label: {
-                Label(showingAddPanel ? "Close" : "+ Add", systemImage: showingAddPanel ? "xmark" : "plus")
+                Label(showingAddPanel ? "Close" : "Add", systemImage: showingAddPanel ? "xmark" : "plus")
             }
             .buttonStyle(.bordered)
             .accessibilityLabel(showingAddPanel ? "Close add panel" : "Add a line")
