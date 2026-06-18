@@ -2,7 +2,7 @@ import Foundation
 import UserNotifications
 
 final class NotificationService {
-    private let center = UNUserNotificationCenter.current()
+    private lazy var center = UNUserNotificationCenter.current()
     private var lastNotificationByFavorite: [UUID: Date] = [:]
 
     func requestPermission() async -> Bool {
