@@ -139,7 +139,7 @@ struct WatchedLineRow: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 32, height: 32)
                 .contentShape(Rectangle())
-                .onTapGesture(perform: onToggleExpand)
+                .highPriorityGesture(TapGesture().onEnded { onToggleExpand() })
                 .accessibilityLabel(isExpanded ? "Collapse options" : "Show options")
                 .accessibilityAddTraits(.isButton)
         }
