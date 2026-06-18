@@ -135,7 +135,7 @@ struct ProfileDetailHeader: View {
         HStack {
             Text("\(appState.activeProfile?.displayEmoji ?? "🚆") \(appState.activeProfile?.name ?? "Watchlist")")
                 .font(.largeTitle.weight(.bold))
-                .foregroundStyle(SBBStyle.graphite)
+                .foregroundStyle(.primary)
             Spacer()
             Button {
                 showingEditor = true
@@ -488,7 +488,7 @@ struct DepartureBoardRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(snapshot.destination)
                     .font(.headline)
-                    .foregroundStyle(SBBStyle.graphite)
+                    .foregroundStyle(.primary)
                 if let delay = snapshot.delayMinutes, delay > 0 {
                     Text("+\(delay) min")
                         .font(.caption)

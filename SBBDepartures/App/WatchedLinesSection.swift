@@ -395,7 +395,7 @@ struct StopPickerRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(stop.name)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(SBBStyle.graphite)
+                    .foregroundStyle(.primary)
                     .lineLimit(1)
                 if let distance = stop.distance {
                     Text("\(Int(distance)) m away")
@@ -431,7 +431,7 @@ struct CandidateLineRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("→ \(departure.destination)")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(alreadySaved ? .secondary : SBBStyle.graphite)
+                    .foregroundStyle(alreadySaved ? .secondary : .primary)
                     .lineLimit(1)
                 Text(DepartureDateFormatting.timeFormatter.string(
                     from: departure.realtimeDeparture ?? departure.plannedDeparture))
