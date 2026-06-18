@@ -111,7 +111,7 @@ struct SidebarProfileRow: View {
                 .font(.title3)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(profile.name).lineLimit(1)
+                Text(profile.name).lineLimit(1).foregroundStyle(.primary)
                 Text(profile.mode == .automatic
                      ? "Current location"
                      : "\(appState.state.favorites.filter { $0.profileId == profile.id }.count) saved")
@@ -213,7 +213,7 @@ struct ProfileEditorSheet: View {
 
                     editorSection(title: "ICON") {
                         LazyVGrid(
-                            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 8),
+                            columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
                             spacing: 8
                         ) {
                             ForEach(emojiChoices, id: \.self) { emoji in
@@ -330,7 +330,7 @@ struct NewWatchlistSheet: View {
 
                     creatorSection(title: "ICON") {
                         LazyVGrid(
-                            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 8),
+                            columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
                             spacing: 8
                         ) {
                             ForEach(emojiChoices, id: \.self) { e in
