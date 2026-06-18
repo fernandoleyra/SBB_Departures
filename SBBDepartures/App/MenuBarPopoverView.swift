@@ -142,8 +142,7 @@ struct MenuBarPopoverView: View {
     private var footer: some View {
         HStack {
             Button("Open") { openWindow(id: "management") }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                .buttonStyle(.bordered)
                 .accessibilityLabel("Open management window")
             Spacer()
             Button {
@@ -151,8 +150,7 @@ struct MenuBarPopoverView: View {
             } label: {
                 Label("Manage", systemImage: "gearshape")
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .buttonStyle(.bordered)
             .accessibilityLabel("Manage watchlists")
         }
         .padding(.horizontal, 14)

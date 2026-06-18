@@ -3,6 +3,7 @@ import SwiftUI
 struct ManagementWindowView: View {
     @EnvironmentObject private var appState: DeparturesAppState
     @State private var deletingProfile: LocationProfile?
+    @State private var showingNewWatchlist = false
 
     var body: some View {
         NavigationSplitView {
@@ -30,6 +31,10 @@ struct ManagementWindowView: View {
                 Text("This removes \(count) saved line\(count == 1 ? "" : "s") and all departure data.")
             }
         }
+        .sheet(isPresented: $showingNewWatchlist) {
+            NewWatchlistSheet()
+                .environmentObject(appState)
+        }
     }
 
     // MARK: - Sidebar
@@ -52,7 +57,7 @@ struct ManagementWindowView: View {
         .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) {
             Button {
-                appState.addProfile()
+                showingNewWatchlist = true
             } label: {
                 Label("New Watchlist", systemImage: "plus")
                     .frame(maxWidth: .infinity)
@@ -89,7 +94,7 @@ struct ManagementWindowView: View {
             .padding(24)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(SBBStyle.milk)
+        .background(Color(NSColor.windowBackgroundColor))
         .navigationTitle(appState.activeProfile?.name ?? "Watchlist")
     }
 }
@@ -137,20 +142,23 @@ struct ProfileDetailHeader: View {
             } label: {
                 Image(systemName: "ellipsis.circle")
                     .font(.title2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Edit watchlist")
-            .popover(isPresented: $showingEditor, arrowEdge: .top) {
+            .sheet(isPresented: $showingEditor) {
                 if let binding = profileBinding {
-                    ProfileEditorPopover(
+                    ProfileEditorSheet(
                         profile: binding,
                         canDelete: appState.state.profiles.count > 1,
                         onDelete: {
                             showingEditor = false
-                            onDeleteProfile()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                onDeleteProfile()
+                            }
                         }
                     )
+                    .environmentObject(appState)
                 }
             }
         }
@@ -165,52 +173,233 @@ struct ProfileDetailHeader: View {
     }
 }
 
-// MARK: - ProfileEditorPopover
+// MARK: - ProfileEditorSheet (new, replaces ProfileEditorPopover)
 
-struct ProfileEditorPopover: View {
+struct ProfileEditorSheet: View {
     @Binding var profile: LocationProfile
     var canDelete: Bool
     var onDelete: () -> Void
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var nameFocused: Bool
 
     private let emojiChoices = ["🏠", "💼", "📍", "🚆", "⭐️", "🎒", "☕️", "🏫"]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            TextField("Watchlist name", text: $profile.name)
-                .textFieldStyle(.roundedBorder)
-
-            HStack(spacing: 8) {
-                ForEach(emojiChoices, id: \.self) { emoji in
-                    Button {
-                        profile.emoji = emoji
-                    } label: {
-                        Text(emoji)
-                            .font(.title3)
-                            .frame(width: 34, height: 30)
-                            .background(
-                                profile.displayEmoji == emoji ? SBBStyle.cloud : Color.clear,
-                                in: RoundedRectangle(cornerRadius: 6)
-                            )
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Use \(emoji) icon")
-                }
+        VStack(spacing: 0) {
+            // Toolbar
+            HStack {
+                Spacer()
+                Text("Edit Watchlist")
+                    .font(.headline)
+                Spacer()
+                Button("Done") { dismiss() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SBBStyle.red)
+                    .keyboardShortcut(.return, modifiers: [])
             }
-
-            Picker("Mode", selection: $profile.mode) {
-                Text("Manual").tag(LocationProfile.Mode.manual)
-                Text("Auto (location)").tag(LocationProfile.Mode.automatic)
-            }
-            .pickerStyle(.segmented)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color(NSColor.windowBackgroundColor))
 
             Divider()
 
-            Button("Delete Watchlist", role: .destructive, action: onDelete)
-                .disabled(!canDelete)
-                .accessibilityLabel("Delete this watchlist")
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    editorSection(title: "NAME") {
+                        TextField("Watchlist name", text: $profile.name)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($nameFocused)
+                    }
+
+                    editorSection(title: "ICON") {
+                        LazyVGrid(
+                            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 8),
+                            spacing: 8
+                        ) {
+                            ForEach(emojiChoices, id: \.self) { emoji in
+                                emojiCell(emoji, selected: profile.displayEmoji == emoji) {
+                                    profile.emoji = emoji
+                                }
+                            }
+                        }
+                    }
+
+                    editorSection(title: "TYPE") {
+                        Picker("Mode", selection: $profile.mode) {
+                            Label("Manual — add stops yourself", systemImage: "hand.tap")
+                                .tag(LocationProfile.Mode.manual)
+                            Label("Auto — use current location", systemImage: "location")
+                                .tag(LocationProfile.Mode.automatic)
+                        }
+                        .pickerStyle(.radioGroup)
+                    }
+
+                    if canDelete {
+                        Divider()
+                        Button(role: .destructive, action: onDelete) {
+                            Label("Delete Watchlist", systemImage: "trash")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.large)
+                        .foregroundStyle(SBBStyle.redDark)
+                    }
+                }
+                .padding(20)
+            }
         }
-        .padding(16)
-        .frame(width: 280)
+        .frame(width: 360)
+        .background(Color(NSColor.windowBackgroundColor))
+        .onAppear { nameFocused = true }
+    }
+
+    private func editorSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            content()
+        }
+    }
+
+    private func emojiCell(_ emoji: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(emoji)
+                .font(.title2)
+                .frame(width: 44, height: 44)
+                .background(
+                    selected ? SBBStyle.red.opacity(0.12) : Color(NSColor.controlBackgroundColor),
+                    in: RoundedRectangle(cornerRadius: 8)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(
+                            selected ? SBBStyle.red : Color(NSColor.separatorColor),
+                            lineWidth: selected ? 2 : 0.5
+                        )
+                }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Set icon to \(emoji)")
+    }
+}
+
+// MARK: - NewWatchlistSheet (new)
+
+struct NewWatchlistSheet: View {
+    @EnvironmentObject private var appState: DeparturesAppState
+    @Environment(\.dismiss) private var dismiss
+    @State private var name = ""
+    @State private var emoji = "⭐️"
+    @State private var mode: LocationProfile.Mode = .manual
+    @FocusState private var nameFocused: Bool
+
+    private let emojiChoices = ["🏠", "💼", "📍", "🚆", "⭐️", "🎒", "☕️", "🏫"]
+
+    private var trimmedName: String { name.trimmingCharacters(in: .whitespaces) }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Toolbar
+            HStack {
+                Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.escape, modifiers: [])
+                Spacer()
+                Text("New Watchlist")
+                    .font(.headline)
+                Spacer()
+                Button("Create") { create() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SBBStyle.red)
+                    .disabled(trimmedName.isEmpty)
+                    .keyboardShortcut(.return, modifiers: [])
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color(NSColor.windowBackgroundColor))
+
+            Divider()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    creatorSection(title: "NAME") {
+                        TextField("e.g. Home, Office, Station…", text: $name)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($nameFocused)
+                    }
+
+                    creatorSection(title: "ICON") {
+                        LazyVGrid(
+                            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 8),
+                            spacing: 8
+                        ) {
+                            ForEach(emojiChoices, id: \.self) { e in
+                                emojiCell(e, selected: emoji == e) { emoji = e }
+                            }
+                        }
+                    }
+
+                    creatorSection(title: "TYPE") {
+                        Picker("Mode", selection: $mode) {
+                            Label("Manual — add stops yourself", systemImage: "hand.tap")
+                                .tag(LocationProfile.Mode.manual)
+                            Label("Auto — use current location", systemImage: "location")
+                                .tag(LocationProfile.Mode.automatic)
+                        }
+                        .pickerStyle(.radioGroup)
+                    }
+                }
+                .padding(20)
+            }
+        }
+        .frame(width: 360, height: 420)
+        .background(Color(NSColor.windowBackgroundColor))
+        .onAppear { nameFocused = true }
+    }
+
+    private func create() {
+        guard !trimmedName.isEmpty else { return }
+        let profile = LocationProfile(
+            id: UUID(),
+            name: trimmedName,
+            coordinate: nil,
+            radiusMeters: mode == .automatic ? 600 : nil,
+            mode: mode,
+            emoji: emoji,
+            colorHex: nil
+        )
+        appState.insertProfile(profile)
+        dismiss()
+    }
+
+    private func creatorSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            content()
+        }
+    }
+
+    private func emojiCell(_ e: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(e)
+                .font(.title2)
+                .frame(width: 44, height: 44)
+                .background(
+                    selected ? SBBStyle.red.opacity(0.12) : Color(NSColor.controlBackgroundColor),
+                    in: RoundedRectangle(cornerRadius: 8)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(
+                            selected ? SBBStyle.red : Color(NSColor.separatorColor),
+                            lineWidth: selected ? 2 : 0.5
+                        )
+                }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Set icon to \(e)")
     }
 }
 
@@ -251,7 +440,8 @@ struct DepartureBoardSection: View {
                     .foregroundStyle(SBBStyle.redDark)
                     .padding(10)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
+                    .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                    .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
             }
 
             let rows = Array(appState.dashboardSnapshots.prefix(12))
@@ -261,8 +451,8 @@ struct DepartureBoardSection: View {
                     .frame(maxWidth: .infinity, minHeight: 80)
                     .multilineTextAlignment(.center)
                     .padding()
-                    .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
-                    .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
+                    .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                    .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(rows.enumerated()), id: \.element.id) { index, snapshot in
@@ -272,8 +462,8 @@ struct DepartureBoardSection: View {
                         }
                     }
                 }
-                .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
-                .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
+                .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
             }
         }
     }
@@ -328,4 +518,3 @@ struct DepartureBoardRow: View {
         }())
     }
 }
-

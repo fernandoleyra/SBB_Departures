@@ -66,8 +66,8 @@ struct WatchedLinesSection: View {
                 .frame(maxWidth: .infinity, minHeight: 70)
                 .multilineTextAlignment(.center)
                 .padding()
-                .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
-                .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
+                .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
         } else {
             VStack(spacing: 6) {
                 ForEach(appState.activeFavorites) { favorite in
@@ -104,8 +104,8 @@ struct WatchedLineRow: View {
                 expandedRow
             }
         }
-        .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
-        .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
+        .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+        .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
     }
 
     private var mainRow: some View {
@@ -158,7 +158,7 @@ struct WatchedLineRow: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(SBBStyle.milk)
+        .background(Color(NSColor.windowBackgroundColor))
     }
 
     private var walkField: some View {
@@ -228,8 +228,8 @@ struct AddLinePanel: View {
             columns
         }
         .padding(14)
-        .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 8))
-        .overlay { RoundedRectangle(cornerRadius: 8).stroke(SBBStyle.cloud) }
+        .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+        .overlay { RoundedRectangle(cornerRadius: 8).stroke(Color(NSColor.separatorColor)) }
         .onDisappear {
             appState.searchQuery = ""
         }
@@ -315,7 +315,7 @@ struct AddLinePanel: View {
                     .padding(4)
                 }
                 .frame(maxHeight: 200)
-                .background(SBBStyle.milk, in: RoundedRectangle(cornerRadius: 6))
+                .background(Color(NSColor.windowBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
             }
         }
         .frame(minWidth: 180, maxWidth: 260)
@@ -365,7 +365,7 @@ struct AddLinePanel: View {
                     .padding(4)
                 }
                 .frame(maxHeight: 200)
-                .background(SBBStyle.milk, in: RoundedRectangle(cornerRadius: 6))
+                .background(Color(NSColor.windowBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
             }
         }
         .frame(maxWidth: .infinity)
@@ -378,7 +378,7 @@ struct AddLinePanel: View {
             .frame(maxWidth: .infinity, minHeight: 80)
             .multilineTextAlignment(.center)
             .padding(8)
-            .background(SBBStyle.milk, in: RoundedRectangle(cornerRadius: 6))
+            .background(Color(NSColor.windowBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
     }
 }
 
@@ -406,7 +406,7 @@ struct StopPickerRow: View {
             Spacer()
         }
         .padding(10)
-        .background(isSelected ? SBBStyle.white : Color.clear, in: RoundedRectangle(cornerRadius: 6))
+        .background(isSelected ? Color(NSColor.controlBackgroundColor) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
         .overlay {
             RoundedRectangle(cornerRadius: 6)
                 .stroke(isSelected ? SBBStyle.red : Color.clear)
@@ -456,7 +456,7 @@ struct CandidateLineRow: View {
             }
         }
         .padding(10)
-        .background(SBBStyle.white, in: RoundedRectangle(cornerRadius: 6))
+        .background(Color(NSColor.controlBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
         .opacity(alreadySaved ? 0.6 : 1.0)
     }
 }

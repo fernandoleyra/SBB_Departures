@@ -110,6 +110,12 @@ final class DeparturesAppState: NSObject, ObservableObject {
         persist()
     }
 
+    func insertProfile(_ profile: LocationProfile) {
+        state.profiles.append(profile)
+        state.activeProfileId = profile.id
+        persist()
+    }
+
     func updateProfile(_ profile: LocationProfile) {
         guard let index = state.profiles.firstIndex(where: { $0.id == profile.id }) else { return }
         state.profiles[index] = profile
