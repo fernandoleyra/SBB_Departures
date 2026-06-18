@@ -2,155 +2,222 @@ import SwiftUI
 
 struct MenuBarPopoverView: View {
     @EnvironmentObject private var appState: DeparturesAppState
-    @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) private var openWindow
+
+    private var locationProfile: LocationProfile? {
+        appState.state.profiles.first { $0.mode == .automatic }
+    }
+
+    // 1 row per unique line/direction — the soonest departure from nearbySnapshots.
+    private var quickViewRows: [DepartureSnapshot] {
+        var seen = Set<String>()
+        return appState.nearbySnapshots
+            .filter { $0.effectiveDeparture >= Date().addingTimeInterval(-60) }
+            .sorted { $0.effectiveDeparture < $1.effectiveDeparture }
+            .filter { seen.insert("\($0.lineDisplay)-\($0.destination)").inserted }
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 0) {
             header
-            profilePicker
-            staleBanner
-            departuresList
             Divider()
-            controls
+            content
+            Divider()
+            footer
         }
-        .padding(16)
+        .frame(width: 420)
+        .onAppear {
+            if locationProfile != nil {
+                Task { await appState.refreshNearbyDepartures() }
+            }
+        }
     }
 
     private var header: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("SBB Departures")
-                    .font(.headline)
-                Text(appState.activeProfile?.name ?? "No profile")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+        HStack(spacing: 8) {
+            Image(systemName: "location.fill")
+                .foregroundStyle(SBBStyle.red)
+                .font(.caption)
+            Text(locationProfile?.name ?? "Quick View")
+                .font(.headline)
             Spacer()
-            if appState.isRefreshing {
-                ProgressView()
-                    .controlSize(.small)
-            }
-        }
-    }
-
-    private var profilePicker: some View {
-        Picker("Profile", selection: Binding(
-            get: { appState.state.activeProfileId },
-            set: { id in
-                if let profile = appState.state.profiles.first(where: { $0.id == id }) {
-                    appState.setActiveProfile(profile)
+            if appState.isRefreshing || appState.isRefreshingNearby {
+                ProgressView().controlSize(.small)
+            } else {
+                Button {
+                    Task { await appState.refreshNearbyDepartures() }
+                } label: {
+                    Image(systemName: "arrow.clockwise").foregroundStyle(.secondary)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Refresh departures")
             }
-        )) {
-            ForEach(appState.state.profiles) { profile in
-                Text(profile.name).tag(profile.id)
+            if let last = appState.state.lastRefresh {
+                Text(DepartureDateFormatting.relativeFormatter.localizedString(for: last, relativeTo: Date()))
+                    .font(.caption2)
+                    .foregroundStyle(
+                        DepartureLogic.isStale(lastRefresh: appState.state.lastRefresh)
+                            ? Color(hex: SBBPalette.orangeHex)
+                            : .secondary
+                    )
             }
         }
-        .pickerStyle(.segmented)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
     }
 
     @ViewBuilder
-    private var staleBanner: some View {
-        if let staleText = appState.staleText {
-            Label(staleText, systemImage: "clock.badge.exclamationmark")
-                .font(.caption)
-                .foregroundStyle(.orange)
-        }
-
-        if let error = appState.state.lastErrorMessage {
-            Label(error, systemImage: "exclamationmark.triangle")
-                .font(.caption)
-                .foregroundStyle(.red)
-                .lineLimit(2)
+    private var content: some View {
+        if appState.locationAuthorization == .denied || appState.locationAuthorization == .restricted {
+            noPermissionView
+        } else if locationProfile == nil {
+            noProfileView
+        } else {
+            departuresList
         }
     }
 
+    private var noPermissionView: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "location.slash")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+            Text("Location access needed")
+                .font(.subheadline.weight(.semibold))
+            Button("Allow Location Access") {
+                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SBBStyle.red)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(20)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var noProfileView: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "location.circle")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+            Text("No location watchlist set up")
+                .font(.subheadline.weight(.semibold))
+            Button("Create Nearby Watchlist →") {
+                appState.addProfile(mode: .automatic)
+                openWindow(id: "management")
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SBBStyle.red)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(20)
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
     private var departuresList: some View {
-        Group {
-            if appState.activeSnapshots.isEmpty {
-                ContentUnavailableView(
-                    "No departures",
-                    systemImage: "tram",
-                    description: Text("Add a stop, line, and direction in Settings.")
-                )
-                .frame(height: 170)
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(appState.activeSnapshots.prefix(8)) { snapshot in
-                            DepartureRow(snapshot: snapshot)
-                        }
+        if quickViewRows.isEmpty {
+            VStack(spacing: 6) {
+                Image(systemName: "tram").foregroundStyle(.secondary)
+                Text("No upcoming departures")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(20)
+        } else {
+            VStack(spacing: 0) {
+                ForEach(Array(quickViewRows.enumerated()), id: \.element.id) { index, snapshot in
+                    QuickDepartureRow(snapshot: snapshot)
+                    if index < quickViewRows.count - 1 {
+                        Divider().padding(.leading, 54)
                     }
                 }
-                .frame(maxHeight: 270)
             }
         }
     }
 
-    private var controls: some View {
+    private var footer: some View {
         HStack {
-            Button {
-                Task { await appState.refreshNow() }
-            } label: {
-                Label("Refresh", systemImage: "arrow.clockwise")
-            }
-            .disabled(appState.isRefreshing)
-
+            Button("Open") { openWindow(id: "management") }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("Open management window")
             Spacer()
-
             Button {
-                openSettings()
+                openWindow(id: "management")
             } label: {
-                Label("Settings", systemImage: "gearshape")
+                Label("Manage", systemImage: "gearshape")
             }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel("Manage watchlists")
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
     }
 }
 
-struct DepartureRow: View {
+struct QuickDepartureRow: View {
     var snapshot: DepartureSnapshot
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 10) {
-            Text("\(DepartureLogic.minutesUntil(snapshot.effectiveDeparture))")
-                .font(.system(size: 28, weight: .semibold, design: .rounded))
+        HStack(spacing: 12) {
+            Text("\(DepartureLogic.minutesUntil(snapshot.effectiveDeparture))′")
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .monospacedDigit()
+                .foregroundStyle(SBBStyle.red)
                 .frame(width: 46, alignment: .trailing)
 
+            LineBadge(
+                text: snapshot.lineDisplay,
+                color: SBBStyle.badgeColor(for: snapshot.lineDisplay)
+            )
+
             VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(snapshot.lineDisplay)
-                        .font(.headline)
-                    Text("to \(snapshot.destination)")
-                        .lineLimit(1)
-                        .foregroundStyle(.secondary)
-                }
-                Text(snapshot.stopName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text("→ \(snapshot.destination)")
+                    .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(snapshot.stopName)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                    if let delay = snapshot.delayMinutes, delay > 0 {
+                        Text("+\(delay)′")
+                            .font(.caption)
+                            .foregroundStyle(SBBStyle.redDark)
+                    }
+                }
             }
 
             Spacer()
 
             VStack(alignment: .trailing, spacing: 2) {
                 Text(DepartureDateFormatting.timeFormatter.string(from: snapshot.effectiveDeparture))
-                    .font(.subheadline)
-                    .monospacedDigit()
-                HStack(spacing: 6) {
-                    if let delay = snapshot.delayMinutes, delay > 0 {
-                        Text("+\(delay)")
-                            .foregroundStyle(.red)
-                    }
-                    if let platform = snapshot.platform, !platform.isEmpty {
-                        Text(platform)
-                    }
+                    .font(.subheadline.monospacedDigit())
+                if let platform = snapshot.platform, !platform.isEmpty {
+                    Text(platform)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
             }
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.45), in: RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
+    }
+
+    private var accessibilitySummary: String {
+        var parts = [
+            "\(snapshot.lineDisplay) to \(snapshot.destination)",
+            "in \(DepartureLogic.minutesUntil(snapshot.effectiveDeparture)) minutes",
+            "from \(snapshot.stopName)"
+        ]
+        if let delay = snapshot.delayMinutes, delay > 0 { parts.append("\(delay) minutes delayed") }
+        return parts.joined(separator: ", ")
     }
 }
