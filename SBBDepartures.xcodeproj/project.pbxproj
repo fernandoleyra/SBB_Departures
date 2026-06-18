@@ -34,6 +34,7 @@
 		A00000000000000000001208 /* DeparturesAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002007 /* DeparturesAppState.swift */; };
 		A00000000000000000001209 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002003 /* SharedStore.swift */; };
 		A0000000000000000000120A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000002004 /* NotificationService.swift */; };
+		A0000000000000000000100C /* ManagementWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000201A /* ManagementWindowView.swift */; };
 		A00000000000000000001301 /* SBBDeparturesWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A00000000000000000003002 /* SBBDeparturesWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		A00000000000000000002012 /* DepartureLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartureLogicTests.swift; sourceTree = "<group>"; };
 		A00000000000000000002018 /* SBBStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBStyleTests.swift; sourceTree = "<group>"; };
 		A00000000000000000002019 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000201A /* ManagementWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementWindowView.swift; sourceTree = "<group>"; };
 		A00000000000000000002013 /* SBBDepartures.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SBBDepartures.entitlements; sourceTree = "<group>"; };
 		A00000000000000000002014 /* SBBDeparturesWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SBBDeparturesWidget.entitlements; sourceTree = "<group>"; };
 		A00000000000000000002015 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				A00000000000000000002006 /* SBBDeparturesApp.swift */,
 				A00000000000000000002007 /* DeparturesAppState.swift */,
 				A00000000000000000002008 /* MenuBarPopoverView.swift */,
+				A0000000000000000000201A /* ManagementWindowView.swift */,
 				A00000000000000000002009 /* SettingsView.swift */,
 				A00000000000000000002016 /* SBBStyle.swift */,
 				A00000000000000000002017 /* DashboardView.swift */,
@@ -286,6 +289,7 @@
 				A00000000000000000001006 /* SBBDeparturesApp.swift in Sources */,
 				A00000000000000000001007 /* DeparturesAppState.swift in Sources */,
 				A00000000000000000001008 /* MenuBarPopoverView.swift in Sources */,
+				A0000000000000000000100C /* ManagementWindowView.swift in Sources */,
 				A00000000000000000001009 /* SettingsView.swift in Sources */,
 				A0000000000000000000100A /* SBBStyle.swift in Sources */,
 				A0000000000000000000100B /* DashboardView.swift in Sources */,
