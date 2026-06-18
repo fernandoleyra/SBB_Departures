@@ -135,13 +135,13 @@ struct WatchedLineRow: View {
 
             Spacer()
 
-            Button(action: onToggleExpand) {
-                Image(systemName: isExpanded ? "chevron.up" : "ellipsis")
-                    .foregroundStyle(.secondary)
-                    .frame(width: 28, height: 28)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(isExpanded ? "Collapse options" : "Show options")
+            Image(systemName: isExpanded ? "chevron.up" : "ellipsis")
+                .foregroundStyle(.secondary)
+                .frame(width: 32, height: 32)
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onToggleExpand)
+                .accessibilityLabel(isExpanded ? "Collapse options" : "Show options")
+                .accessibilityAddTraits(.isButton)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
