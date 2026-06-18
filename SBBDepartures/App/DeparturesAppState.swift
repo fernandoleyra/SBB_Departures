@@ -19,7 +19,7 @@ final class DeparturesAppState: NSObject, ObservableObject {
     private let store: SharedStore
     private let notifications = NotificationService()
     private let locationManager = CLLocationManager()
-    var refreshTask: Task<Void, Never>?
+    private var refreshTask: Task<Void, Never>?
 
     init(store: SharedStore = .shared) {
         self.store = store
@@ -33,6 +33,11 @@ final class DeparturesAppState: NSObject, ObservableObject {
     }
 
     deinit {
+        refreshTask?.cancel()
+    }
+
+    /// Cancels the background refresh loop. Exposed for test teardown only.
+    func cancelRefresh() {
         refreshTask?.cancel()
     }
 

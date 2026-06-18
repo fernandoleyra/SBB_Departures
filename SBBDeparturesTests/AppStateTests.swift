@@ -10,7 +10,7 @@ final class AppStateTests: XCTestCase {
             .appendingPathComponent("test-store-\(UUID().uuidString).json")
         let store = SharedStore(fileURL: url)
         let appState = DeparturesAppState(store: store)
-        appState.refreshTask?.cancel()
+        appState.cancelRefresh()
         return appState
     }
 
