@@ -107,6 +107,7 @@ struct MenuBarPopoverView: View {
             Button("Create Nearby Watchlist →") {
                 appState.addProfile(mode: .automatic)
                 openWindow(id: "management")
+                NSApp.activate(ignoringOtherApps: true)
             }
             .buttonStyle(.borderedProminent)
             .tint(SBBStyle.red)
@@ -141,12 +142,16 @@ struct MenuBarPopoverView: View {
 
     private var footer: some View {
         HStack {
-            Button("Open") { openWindow(id: "management") }
-                .buttonStyle(.bordered)
-                .accessibilityLabel("Open management window")
+            Button("Open") {
+                openWindow(id: "management")
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            .buttonStyle(.bordered)
+            .accessibilityLabel("Open management window")
             Spacer()
             Button {
                 openWindow(id: "management")
+                NSApp.activate(ignoringOtherApps: true)
             } label: {
                 Label("Manage", systemImage: "gearshape")
             }

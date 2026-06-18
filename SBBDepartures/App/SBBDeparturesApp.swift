@@ -5,7 +5,7 @@ struct SBBDeparturesApp: App {
     @StateObject private var appState = DeparturesAppState()
 
     var body: some Scene {
-        WindowGroup(id: "management") {
+        Window("SBB Departures", id: "management") {
             ManagementWindowView()
                 .environmentObject(appState)
         }
