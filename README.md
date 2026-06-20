@@ -32,6 +32,16 @@ Developers, designers, and anyone who works from a Mac and commutes by Swiss pub
 
 ---
 
+## Screenshots
+
+![SBBDepartures menu bar popover open on macOS](screenshots/Bildschirmfoto%202026-06-20%20um%2016.58.30.png)
+
+| Menu Bar Popover | Watchlist Manager |
+| --- | --- |
+| ![Nearby departures in the compact menu bar popover](screenshots/Bildschirmfoto%202026-06-20%20um%2016.57.34.webp) | ![Watchlist manager with saved routes and next departures](screenshots/Bildschirmfoto%202026-06-20%20um%2016.57.52.webp) |
+
+---
+
 ## Getting Started
 
 ### Requirements
