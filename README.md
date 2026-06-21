@@ -1,4 +1,4 @@
-# SBB Departures
+# SBBDepartures
 
 **Check your next train without breaking focus — Swiss departures, always one click away.**
 
